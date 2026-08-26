@@ -1,0 +1,149 @@
+global:
+  multitenancy:
+    enabled: true
+  security:
+    authentication:
+      method: oidc
+  identity:
+    auth:
+      enabled: true
+      publicIssuerUrl: "http://localhost:18080/auth/realms/camunda-platform"
+      admin:
+        enabled: true
+        secret:
+          inlineSecret: camunda-admin-local-secret
+      orchestration:
+        redirectUrl: "http://localhost:8080"
+        secret:
+          inlineSecret: orchestration-local-secret
+
+identity:
+  enabled: true
+  firstUser:
+    enabled: true
+    username: demo
+    email: demo@example.org
+    firstName: Demo
+    lastName: User
+    secret:
+      inlineSecret: demo
+  clients:
+    - id: c8volt
+      name: c8volt local development
+      secret:
+        inlineSecret: c8volt-local-secret
+      redirectUris: "/*"
+      rootUrl: "http://localhost"
+      type: confidential
+      permissions:
+        - resourceServerId: orchestration-api
+          definition: read:*
+        - resourceServerId: orchestration-api
+          definition: write:*
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+identityKeycloak:
+  enabled: true
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+  postgresql:
+    primary:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 500m
+          memory: 256Mi
+      persistence:
+        size: 2Gi
+
+identityPostgresql:
+  enabled: true
+  auth:
+    existingSecret: camunda-credentials
+  primary:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+    persistence:
+      size: 2Gi
+
+orchestration:
+  enabled: true
+  profiles:
+    broker: true
+    admin: true
+    operate: true
+    tasklist: true
+  clusterSize: "1"
+  partitionCount: "1"
+  replicationFactor: "1"
+  cpuThreadCount: "2"
+  ioThreadCount: "2"
+  pvcSize: 8Gi
+  data:
+    secondaryStorage:
+      type: elasticsearch
+  resources:
+    requests:
+      cpu: 750m
+      memory: 1600Mi
+    limits:
+      cpu: "2"
+      memory: 2500Mi
+  security:
+    initialization:
+      defaultRoles:
+        admin:
+          users:
+            - demo
+          clients:
+            - c8volt
+    authentication:
+      method: oidc
+      oidc:
+        redirectUrl: "http://localhost:8080"
+        secret:
+          inlineSecret: orchestration-local-secret
+
+elasticsearch:
+  enabled: true
+  master:
+    replicaCount: 1
+    heapSize: 512m
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: "1"
+        memory: 2Gi
+    persistence:
+      size: 4Gi
+
+optimize:
+  enabled: false
+connectors:
+  enabled: false
+webModeler:
+  enabled: false
+webModelerPostgresql:
+  enabled: false
+console:
+  enabled: false

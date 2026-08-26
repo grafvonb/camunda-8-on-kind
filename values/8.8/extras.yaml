@@ -1,0 +1,23 @@
+# Optional broader-test overlay. The core Orchestration pod already includes
+# the Operate and Tasklist profiles and UIs.
+optimize:
+  enabled: true
+  resources:
+    requests:
+      cpu: 250m
+      memory: 768Mi
+    limits:
+      cpu: "1"
+      memory: 1500Mi
+connectors:
+  enabled: true
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+console:
+  enabled: true
+

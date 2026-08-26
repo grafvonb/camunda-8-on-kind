@@ -1,0 +1,32 @@
+app:
+  camunda_version: "8.9"
+  tenant: "tenant-a"
+apis:
+  camunda_api:
+    base_url: "http://localhost:8080"
+    key: camunda_api
+    require_scope: false
+    version: v2
+  operate_api:
+    base_url: "http://localhost:8081"
+    key: operate_api
+    require_scope: false
+    version: v1
+  tasklist_api:
+    base_url: "http://localhost:8082"
+    key: tasklist_api
+    require_scope: false
+    version: v1
+auth:
+  mode: oauth2
+  oauth2:
+    token_url: "http://localhost:18080/auth/realms/camunda-platform/protocol/openid-connect"
+    client_id: c8volt
+    client_secret: c8volt-local-secret
+    scopes:
+      camunda_api: profile
+      operate_api: profile
+      tasklist_api: profile
+http:
+  timeout: 60s
+

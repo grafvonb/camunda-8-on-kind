@@ -1,0 +1,18 @@
+fullnameOverride: postgresql
+auth:
+  username: camunda
+  password: camunda-postgresql-local
+  database: identity
+databases:
+  - identity
+  - webmodeler
+storage:
+  size: 2Gi
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+

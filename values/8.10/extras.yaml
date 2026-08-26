@@ -1,0 +1,32 @@
+# Optional broader-test overlay. Camunda Hub/Web Modeler remains disabled to
+# keep this overlay usable on the 16 GiB Docker allocation.
+optimize:
+  enabled: true
+  database:
+    elasticsearch:
+      enabled: true
+      external: true
+      url:
+        protocol: http
+        host: elasticsearch-master
+        port: 9200
+  resources:
+    requests:
+      cpu: 250m
+      memory: 768Mi
+    limits:
+      cpu: "1"
+      memory: 1500Mi
+connectors:
+  enabled: true
+  security:
+    authentication:
+      method: oidc
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+

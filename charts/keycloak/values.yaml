@@ -1,0 +1,25 @@
+fullnameOverride: ""
+image:
+  repository: quay.io/keycloak/keycloak
+  tag: 26.3.3
+  pullPolicy: IfNotPresent
+auth:
+  adminUser: admin
+  adminPassword: local-admin
+database:
+  host: keycloak-postgresql
+  port: 5432
+  name: keycloak
+  username: keycloak
+  password: local-password
+httpRelativePath: /auth/
+service:
+  port: 80
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+

@@ -1,0 +1,43 @@
+clusterName: elasticsearch
+replicas: 1
+minimumMasterNodes: 1
+protocol: http
+imageTag: "8.18.0"
+createCert: false
+secret:
+  enabled: true
+esConfig:
+  elasticsearch.yml: |
+    cluster.name: elasticsearch
+    network.host: 0.0.0.0
+    xpack.security.enabled: false
+    xpack.security.http.ssl.enabled: false
+    xpack.security.transport.ssl.enabled: false
+extraEnvs:
+  - name: ES_JAVA_OPTS
+    value: "-Xms512m -Xmx512m"
+lifecycle:
+  postStart:
+    exec:
+      command:
+        - bash
+        - -c
+        - |
+          until curl -fsS http://localhost:9200/_cluster/health >/dev/null 2>&1; do sleep 2; done
+          curl -fsS -X PUT http://localhost:9200/_index_template/camunda-local-auto-expand \
+            -H 'Content-Type: application/json' \
+            -d '{"index_patterns":["*operate*","*orchestration*","*tasklist*","*camunda*","*zeebe*"],"priority":1,"template":{"settings":{"index.auto_expand_replicas":"0-1"}}}'
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: "1"
+    memory: 2Gi
+volumeClaimTemplate:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi
+

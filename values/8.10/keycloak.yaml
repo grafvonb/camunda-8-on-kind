@@ -1,0 +1,19 @@
+fullnameOverride: keycloak
+auth:
+  adminUser: admin
+  adminPassword: keycloak-local-admin
+database:
+  host: keycloak-postgresql
+  port: 5432
+  name: keycloak
+  username: keycloak
+  password: keycloak-postgresql-local
+httpRelativePath: /auth/
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+

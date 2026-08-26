@@ -1,0 +1,7 @@
+apiVersion: v2
+name: local-postgresql
+description: Minimal persistent PostgreSQL companion for disposable Camunda KIND clusters
+type: application
+version: 0.1.0
+appVersion: "16"
+

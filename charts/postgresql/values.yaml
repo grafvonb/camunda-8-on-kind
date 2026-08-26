@@ -1,0 +1,24 @@
+fullnameOverride: ""
+image:
+  repository: postgres
+  tag: 16-alpine
+  pullPolicy: IfNotPresent
+auth:
+  username: app
+  password: local-password
+  database: app
+databases:
+  - app
+service:
+  port: 5432
+storage:
+  size: 2Gi
+  storageClassName: ""
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
