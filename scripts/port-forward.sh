@@ -8,6 +8,7 @@ source "${SCRIPT_DIR}/common.sh"
 load_version "${1:-}"
 require_command kubectl
 require_kind_context
+require_command lsof
 
 STATE_DIR="${CAMUNDA_DIR}/.state/ports/${CAMUNDA_VERSION}"
 mkdir -p "${STATE_DIR}"
@@ -24,20 +25,37 @@ start_forward() {
   local remote_port="$3"
   local label="$4"
   local pid
+  local owner_pid
+  local attempt
 
   kubectl --context "${KIND_CONTEXT}" --namespace "${CAMUNDA_NAMESPACE}" get service "${service}" >/dev/null
+  owner_pid="$(lsof -nP -t -iTCP:"${local_port}" -sTCP:LISTEN 2>/dev/null | head -n 1 || true)"
+  if [ -n "${owner_pid}" ]; then
+    echo "Cannot start ${label} port forward: localhost:${local_port} is already in use." >&2
+    ps -p "${owner_pid}" -o pid=,command= >&2 || true
+    return 1
+  fi
+
   nohup kubectl --context "${KIND_CONTEXT}" --namespace "${CAMUNDA_NAMESPACE}" \
     port-forward "service/${service}" "${local_port}:${remote_port}" \
     >"${STATE_DIR}/${label}.log" 2>&1 &
   pid="$!"
   echo "${pid}" >"${STATE_DIR}/${label}.pid"
-  sleep 0.25
-  if ! kill -0 "${pid}" >/dev/null 2>&1; then
-    echo "Failed to start ${label} port forward on localhost:${local_port}." >&2
-    sed -n '1,80p' "${STATE_DIR}/${label}.log" >&2
-    return 1
-  fi
-  echo "${label}: http://localhost:${local_port} -> ${service}:${remote_port}"
+
+  for attempt in {1..20}; do
+    if ! kill -0 "${pid}" >/dev/null 2>&1; then
+      break
+    fi
+    if lsof -nP -a -p "${pid}" -iTCP:"${local_port}" -sTCP:LISTEN >/dev/null 2>&1; then
+      echo "${label}: http://localhost:${local_port} -> ${service}:${remote_port}"
+      return 0
+    fi
+    sleep 0.25
+  done
+
+  echo "Failed to start ${label} port forward on localhost:${local_port}." >&2
+  sed -n '1,80p' "${STATE_DIR}/${label}.log" >&2
+  return 1
 }
 
 start_forward "${ORCHESTRATION_SERVICE}" 8080 8080 orchestration
