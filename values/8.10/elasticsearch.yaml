@@ -1,4 +1,5 @@
 clusterName: elasticsearch
+image: "elasticsearch"
 replicas: 1
 minimumMasterNodes: 1
 protocol: http

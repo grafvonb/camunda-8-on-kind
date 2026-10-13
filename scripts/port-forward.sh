@@ -47,7 +47,7 @@ if [ "${LEGACY_V1_APIS}" = "true" ]; then
 fi
 start_forward "${ORCHESTRATION_SERVICE}" 26500 26500 zeebe-grpc
 start_forward "${KEYCLOAK_SERVICE}" 18080 80 keycloak
-start_forward "${IDENTITY_SERVICE}" 18081 80 identity
+start_forward "${IDENTITY_SERVICE}" 8084 80 identity
 start_forward "${ELASTICSEARCH_SERVICE}" 9200 9200 elasticsearch
 
 trap - ERR

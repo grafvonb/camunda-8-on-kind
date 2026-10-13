@@ -27,7 +27,7 @@ fi
 "${HELM}" repo add camunda https://helm.camunda.io --force-update
 
 case "${INFRASTRUCTURE_MODE}" in
-  external-chart15-alpha4)
+  external-chart15|external-chart15-alpha4|external-chart15-alpha5)
     "${HELM}" repo add elastic https://helm.elastic.co --force-update
     "${HELM}" repo update camunda elastic
 

@@ -8,4 +8,7 @@ nodes:
         nodeRegistration:
           kubeletExtraArgs:
             node-labels: "camunda.local/workloads=true"
+    extraMounts:
+      - hostPath: /etc/ssl/certs
+        containerPath: /etc/ssl/certs
 

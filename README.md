@@ -2,7 +2,7 @@
 
 This directory contains a self-contained local Camunda environment for API
 compatibility tests, application development, and occasional manual UI testing. It
-supports Camunda 8.8, 8.9, and the current 8.10 alpha line. Camunda 8.7 is
+supports Camunda 8.8, 8.9, and 8.10. Camunda 8.7 is
 intentionally out of scope and rejected by the scripts.
 
 The setup does not read, source, or reuse files from the parent directory. All
@@ -50,11 +50,10 @@ The chart versions and release capabilities are pinned in
 | --- | --- | --- | --- |
 | 8.8 | `13.12.8` | 3.20.2 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
 | 8.9 | `14.8.4` | 3.20.2 or 4.2.4 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
-| 8.10 | `15.0.0-alpha4` | 4.2.3 | Explicit companion releases |
+| 8.10 | `15.1.0` | 4.2.3 or 4.2.4 | Explicit companion releases |
 
-The 8.10 version is a preview release, not a production baseline. Its pin is
-kept explicit so a newly published alpha cannot silently change the local
-environment.
+The 8.10 version pin is kept explicit so a newly published patch or minor chart
+cannot silently change the local environment.
 
 ## Prerequisites
 
@@ -247,7 +246,7 @@ Start version-aware port forwards after Helm installation:
 | Tasklist v1 API alias (8.8/8.9) | `http://localhost:8082` | Same Orchestration HTTP service |
 | Zeebe gRPC | `localhost:26500` | Orchestration gateway |
 | Keycloak | `http://localhost:18080/auth/` | Version-specific Keycloak service |
-| Identity | `http://localhost:18081` | Identity service |
+| Identity | `http://localhost:8084` | Identity service |
 | Elasticsearch | `http://localhost:9200` | Version-specific Elasticsearch service |
 
 Ports 8080, 8081, and 8082 deliberately target the same pod. Separate local

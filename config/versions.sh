@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Published chart pins validated against the Camunda Helm version matrix on
-# 2026-08-25. Override HELM_BIN when a version-specific Helm executable is
-# needed (8.8 officially requires Helm 3; 8.10 alpha4 requires Helm 4).
+# 2026-10-13. Override HELM_BIN when a version-specific Helm executable is
+# needed (8.8 officially requires Helm 3; 8.10 requires Helm 4).
 
 configure_version() {
   case "${1:-}" in
@@ -31,9 +31,9 @@ configure_version() {
     8.10)
       CAMUNDA_VERSION="8.10"
       KIND_CLUSTER="c8.10"
-      CHART_VERSION="15.0.0-alpha4"
-      HELM_COMPATIBILITY="4.2.3"
-      INFRASTRUCTURE_MODE="external-chart15-alpha4"
+      CHART_VERSION="15.1.0"
+      HELM_COMPATIBILITY="4.2.3 or 4.2.4"
+      INFRASTRUCTURE_MODE="external-chart15"
       PREINSTALL_MANIFEST=""
       LEGACY_V1_APIS="false"
       KEYCLOAK_SERVICE="keycloak"
@@ -52,7 +52,7 @@ configure_version() {
   KIND_CONTEXT="kind-${KIND_CLUSTER}"
 
   case "${INFRASTRUCTURE_MODE}" in
-    bundled|external-chart15-alpha4) ;;
+    bundled|external-chart15|external-chart15-alpha4|external-chart15-alpha5) ;;
     *)
       echo "Invalid infrastructure capability for Camunda ${CAMUNDA_VERSION}: ${INFRASTRUCTURE_MODE}" >&2
       return 2
