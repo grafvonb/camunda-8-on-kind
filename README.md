@@ -78,6 +78,24 @@ HELM_BIN=helm4 ./scripts/create-cluster.sh 8.10
 The installer reports the detected Helm version. It never installs, upgrades,
 or replaces Helm itself.
 
+## Local CA certificates (Zscaler/proxy networks)
+
+Cluster creation and recreation automatically use
+`~/.certs/Zscaler Root CA.pem`. No manual certificate copying is needed:
+
+```bash
+./scripts/recreate-cluster.sh 8.10
+```
+
+The shell scripts check that the certificate is readable before deleting an
+existing cluster. They fill in its absolute path in `kind/kind-config.yaml`
+and save the resulting config under `.state/kind/`. Its `extraMounts` entry
+mounts the certificate read-only inside the node. After KIND starts, the scripts
+refresh the trust store and restart containerd before installing Camunda.
+This happens on every creation and recreation, for all supported versions.
+Resuming an older installation also installs the certificate if its mount is
+missing. No Python, extra options, or manual certificate commands are needed.
+
 ## Resource model
 
 This environment is designed for a machine with 8 Docker CPUs and a 16 GiB

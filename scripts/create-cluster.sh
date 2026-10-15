@@ -6,6 +6,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common.sh"
 # shellcheck source=cluster-runtime.sh
 source "${SCRIPT_DIR}/cluster-runtime.sh"
+# shellcheck source=cluster-certificates.sh
+source "${SCRIPT_DIR}/cluster-certificates.sh"
 
 load_version "${1:-}"
 require_command kind
@@ -29,22 +31,26 @@ if cluster_exists "${KIND_CLUSTER}"; then
     exit 1
   fi
 
+  prepare_kind_config
   stop_tracked_forwards_for_all_versions
   stop_other_supported_clusters "${KIND_CLUSTER}"
   start_cluster_containers "${KIND_CLUSTER}"
+  configure_kind_certificates
   "${SCRIPT_DIR}/install.sh" "${CAMUNDA_VERSION}"
   echo "Resumed and completed the Camunda ${CAMUNDA_VERSION} installation in ${KIND_CLUSTER}."
   exit 0
 fi
 
+prepare_kind_config
 stop_tracked_forwards_for_all_versions
 stop_other_supported_clusters "${KIND_CLUSTER}"
 
 kind create cluster \
   --name "${KIND_CLUSTER}" \
-  --config "${CAMUNDA_DIR}/kind/kind-config.yaml" \
+  --config "${KIND_CONFIG_FILE}" \
   --wait 120s
 
+configure_kind_certificates
 "${SCRIPT_DIR}/install.sh" "${CAMUNDA_VERSION}"
 
 echo "Created persistent Camunda ${CAMUNDA_VERSION} cluster ${KIND_CLUSTER}."
