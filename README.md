@@ -2,7 +2,7 @@
 
 This directory contains a self-contained local Camunda environment for API
 compatibility tests, application development, and occasional manual UI testing. It
-supports Camunda 8.8, 8.9, and the current 8.10 alpha line. Camunda 8.7 is
+supports Camunda 8.8, 8.9, and 8.10 GA. Camunda 8.7 is
 intentionally out of scope and rejected by the scripts.
 
 The setup does not read, source, or reuse files from the parent directory. All
@@ -50,11 +50,15 @@ The chart versions and release capabilities are pinned in
 | --- | --- | --- | --- |
 | 8.8 | `13.12.8` | 3.20.2 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
 | 8.9 | `14.8.4` | 3.20.2 or 4.2.4 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
-| 8.10 | `15.0.0-alpha4` | 4.2.3 | Explicit companion releases |
+| 8.10 | `15.1.1` | 3.22.0 or 4.3.0 | Explicit companion releases |
 
-The 8.10 version is a preview release, not a production baseline. Its pin is
-kept explicit so a newly published alpha cannot silently change the local
-environment.
+The 8.10 profile pins the published
+[`camunda-platform-8.10-15.1.1` release](https://github.com/camunda/camunda-platform-helm/releases/tag/camunda-platform-8.10-15.1.1).
+Its packaged defaults use Orchestration and Optimize `8.10.4`, Identity
+`8.10.1`, Connectors `8.10.0`, and Hub `8.10.2` (disabled here). Continue to
+use `8.10` as the script argument to select this patch release. The chart pin keeps later
+releases from silently changing the local environment. The local topology
+remains intended for development even though these are GA application images.
 
 ## Prerequisites
 
@@ -213,6 +217,23 @@ Upgrade or repair an existing installation without recreating the cluster:
 ./scripts/install.sh 8.9
 ```
 
+An existing 8.10 alpha installation does not change when this repository is
+updated or when `switch-cluster.sh` is run. To apply the GA chart to an installed
+8.10 cluster, activate it and explicitly run the installer with a supported Helm
+version, then reopen the forwards and validate:
+
+```bash
+./scripts/switch-cluster.sh 8.10 --no-port-forward
+HELM_BIN=helm4 ./scripts/install.sh 8.10
+./scripts/port-forward.sh 8.10
+./scripts/seed-tenants.sh 8.10
+./scripts/smoke-test.sh 8.10
+```
+
+This repository update does not establish that existing alpha data can migrate
+to GA. For a fresh disposable environment, `recreate-cluster.sh 8.10` installs
+the GA pin from scratch and **deletes that version's existing data**.
+
 All installs use `helm upgrade --install`, a pinned chart version, the explicit
 KIND context, namespace `camunda`, and `--wait` with bounded timeouts.
 
@@ -363,7 +384,13 @@ before the core chart:
 2. `keycloak-postgresql` using the same chart with a separate database;
 3. `keycloak` using the local minimal Keycloak 26 chart;
 4. `elasticsearch` using `elastic/elasticsearch` chart 8.5.1 and
-   Elasticsearch image 8.18.0.
+   Elastic's [official Docker Hub image](https://hub.docker.com/_/elasticsearch)
+   `docker.io/library/elasticsearch:8.19.23`. This avoids the Elastic registry's
+   blob endpoint, which returned HTTP 403 on the local network.
+
+The Elasticsearch image is on the 8.19 line to meet the
+[Camunda 8.10 supported-environment requirements](https://docs.camunda.io/docs/reference/supported-environments/).
+Keycloak 26 and PostgreSQL 16 remain within the supported version ranges.
 
 The core release then connects to these stable service names:
 
@@ -388,6 +415,12 @@ identityPostgresql
 webModelerPostgresql
 top-level elasticsearch
 ```
+
+Chart 15.1 strict values checking is enabled. Thread counts, multitenancy checks
+and tenant API enablement, accepted OIDC audiences, and the c8volt mapping rule
+are supplied through `orchestration.extraConfiguration`, avoiding deprecated
+chart-level application settings. The imported file preserves the local
+two-thread configuration and both the legacy and Orchestration audiences.
 
 ## Directory structure
 
@@ -457,8 +490,8 @@ case in `config/versions.sh` must explicitly declare:
   are enabled.
 
 The scripts reject unknown versions and invalid capability values. Therefore,
-adding 8.11 cannot silently inherit 8.10 alpha4 assumptions. For every new
-8.10 alpha, release candidate, stable chart, or later minor release:
+adding 8.11 cannot silently inherit the 8.10 GA assumptions. For every new
+chart release or later minor release:
 
 1. add or update the candidate case and declare all capabilities;
 2. compare the new `values.yaml`, `values.schema.json`, constraints, and
@@ -470,7 +503,7 @@ adding 8.11 cannot silently inherit 8.10 alpha4 assumptions. For every new
 6. run a clean install, seed tenants, and execute `smoke-test.sh`;
 7. only then replace the committed pin.
 
-Do not assume all chart 15+ releases use the alpha4 external stack. Keep
+Do not assume all chart 15+ releases use the same external stack. Keep
 Elasticsearch, Keycloak, and PostgreSQL explicit where the inspected chart
 requires them. Removed Bitnami dependency keys must not be reintroduced.
 

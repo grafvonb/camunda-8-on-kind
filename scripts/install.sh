@@ -27,7 +27,7 @@ fi
 "${HELM}" repo add camunda https://helm.camunda.io --force-update
 
 case "${INFRASTRUCTURE_MODE}" in
-  external-chart15-alpha4)
+  external-chart15-ga)
     "${HELM}" repo add elastic https://helm.elastic.co --force-update
     "${HELM}" repo update camunda elastic
 
@@ -58,6 +58,10 @@ case "${INFRASTRUCTURE_MODE}" in
     ;;
   bundled)
     "${HELM}" repo update camunda
+    ;;
+  *)
+    echo "Unsupported infrastructure mode: ${INFRASTRUCTURE_MODE}" >&2
+    exit 2
     ;;
 esac
 

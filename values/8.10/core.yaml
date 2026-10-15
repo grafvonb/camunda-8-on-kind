@@ -1,4 +1,6 @@
 global:
+  # Chart 15.1 rejects misspelled or removed chart-owned values instead of warning.
+  strictValues: true
   multitenancy:
     enabled: true
   security:
@@ -90,19 +92,38 @@ orchestration:
   clusterSize: "1"
   partitionCount: "1"
   replicationFactor: "1"
-  cpuThreadCount: "2"
-  ioThreadCount: "2"
   pvcSize: 8Gi
   data:
     secondaryStorage:
       type: elasticsearch
       elasticsearch:
         url: "http://elasticsearch-master:9200"
-  multitenancy:
-    checks:
-      enabled: true
-    api:
-      enabled: true
+  # GA configures application settings through Spring-imported files rather
+  # than the deprecated chart-level thread, tenant, and OIDC compatibility keys.
+  extraConfiguration:
+    - file: local-development.yaml
+      content: |
+        camunda:
+          system:
+            cpu-thread-count: 2
+            io-thread-count: 2
+          security:
+            authentication:
+              oidc:
+                audiences:
+                  - operate-api
+                  - tasklist-api
+                  - zeebe-api
+                  - orchestration
+                  - orchestration-api
+            initialization:
+              mapping-rules:
+                - mapping-rule-id: c8volt-client
+                  claim-name: client_id
+                  claim-value: c8volt
+            multi-tenancy:
+              checks-enabled: true
+              api-enabled: true
   security:
     authentication:
       method: oidc
@@ -110,10 +131,6 @@ orchestration:
         redirectUrl: "http://localhost:8080"
         secret:
           inlineSecret: orchestration-local-secret
-        backwardsCompatibleAudiences:
-          - operate-api
-          - tasklist-api
-          - zeebe-api
     initialization:
       defaultRoles:
         admin:
@@ -121,10 +138,6 @@ orchestration:
             - demo
           clients:
             - c8volt
-      mappingRules:
-        - mappingRuleId: c8volt-client
-          claimName: client_id
-          claimValue: c8volt
   resources:
     requests:
       cpu: 750m

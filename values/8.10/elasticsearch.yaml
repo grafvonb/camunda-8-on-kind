@@ -2,7 +2,11 @@ clusterName: elasticsearch
 replicas: 1
 minimumMasterNodes: 1
 protocol: http
-imageTag: "8.18.0"
+# Elastic's official Docker Hub image avoids the Elastic registry's blob
+# endpoint, which returns HTTP 403 on this local network.
+image: docker.io/library/elasticsearch
+# Camunda 8.10 GA requires Elasticsearch 8.19+ (or a supported 9.x release).
+imageTag: "8.19.23"
 createCert: false
 secret:
   enabled: true
