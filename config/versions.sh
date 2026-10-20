@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# 8.8/8.9 chart pins validated on 2026-08-25; 8.10 updated to the published
+# 8.8 chart pin validated on 2026-08-25.
+# 8.9 updated to chart 14.11.1 on 2026-10-20, using its packaged image defaults.
+# 8.10 updated to the published
 # camunda-platform-8.10-15.1.1 release (Camunda 8.10.4) on 2026-10-15.
 # Override HELM_BIN when a version-specific Helm executable is needed.
 
@@ -20,8 +22,8 @@ configure_version() {
     8.9)
       CAMUNDA_VERSION="8.9"
       KIND_CLUSTER="c8.9"
-      CHART_VERSION="14.8.4"
-      HELM_COMPATIBILITY="3.20.2 or 4.2.4"
+      CHART_VERSION="14.11.1"
+      HELM_COMPATIBILITY="3.22.0 or 4.3.0"
       INFRASTRUCTURE_MODE="bundled"
       PREINSTALL_MANIFEST="manifests/8.9/local-credentials.yaml"
       LEGACY_V1_APIS="true"

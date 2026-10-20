@@ -49,8 +49,15 @@ The chart versions and release capabilities are pinned in
 | Camunda | Helm chart | Helm tested upstream | Infrastructure |
 | --- | --- | --- | --- |
 | 8.8 | `13.12.8` | 3.20.2 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
-| 8.9 | `14.8.4` | 3.20.2 or 4.2.4 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
+| 8.9 | `14.11.1` | 3.22.0 or 4.3.0 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
 | 8.10 | `15.1.1` | 3.22.0 or 4.3.0 | Explicit companion releases |
+
+The 8.9 profile pins
+[`camunda-platform-8.9-14.11.1`](https://github.com/camunda/camunda-platform-helm/releases/tag/camunda-platform-8.9-14.11.1),
+the latest published 8.9 chart checked on 2026-10-20. It uses the chart's packaged
+image defaults: Orchestration and Optimize `8.9.23`, Identity `8.9.10`,
+Connectors `8.9.14`, and Console `8.9.123`, with no image version overrides.
+Continue to use `8.9` as the script argument.
 
 The 8.10 profile pins the published
 [`camunda-platform-8.10-15.1.1` release](https://github.com/camunda/camunda-platform-helm/releases/tag/camunda-platform-8.10-15.1.1).
