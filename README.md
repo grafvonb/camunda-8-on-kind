@@ -49,8 +49,8 @@ The chart versions and release capabilities are pinned in
 | Camunda | Helm chart | Helm tested upstream | Infrastructure |
 | --- | --- | --- | --- |
 | 8.8 | `13.12.8` | 3.20.2 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
-| 8.9 | `14.8.4` | 3.20.2 or 4.2.4 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
-| 8.10 | `15.1.0` | 4.2.3 or 4.2.4 | Explicit companion releases |
+| 8.9 | `14.11.1` | 3.22.0 or 4.3.0 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
+| 8.10 | `15.2.0` | 3.22.1 or 4.3.1 | Explicit companion releases |
 
 The 8.10 version pin is kept explicit so a newly published patch or minor chart
 cannot silently change the local environment.

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Published chart pins validated against the Camunda Helm version matrix on
-# 2026-10-13. Override HELM_BIN when a version-specific Helm executable is
+# 2026-10-21. Override HELM_BIN when a version-specific Helm executable is
 # needed (8.8 officially requires Helm 3; 8.10 requires Helm 4).
 
 configure_version() {
@@ -20,8 +20,8 @@ configure_version() {
     8.9)
       CAMUNDA_VERSION="8.9"
       KIND_CLUSTER="c8.9"
-      CHART_VERSION="14.8.4"
-      HELM_COMPATIBILITY="3.20.2 or 4.2.4"
+      CHART_VERSION="14.11.1"
+      HELM_COMPATIBILITY="3.22.0 or 4.3.0"
       INFRASTRUCTURE_MODE="bundled"
       PREINSTALL_MANIFEST="manifests/8.9/local-credentials.yaml"
       LEGACY_V1_APIS="true"
@@ -31,8 +31,8 @@ configure_version() {
     8.10)
       CAMUNDA_VERSION="8.10"
       KIND_CLUSTER="c8.10"
-      CHART_VERSION="15.1.0"
-      HELM_COMPATIBILITY="4.2.3 or 4.2.4"
+      CHART_VERSION="15.2.0"
+      HELM_COMPATIBILITY="3.22.1 or 4.3.1"
       INFRASTRUCTURE_MODE="external-chart15"
       PREINSTALL_MANIFEST=""
       LEGACY_V1_APIS="false"
