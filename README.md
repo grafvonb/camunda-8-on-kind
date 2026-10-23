@@ -49,20 +49,22 @@ The chart versions and release capabilities are pinned in
 | Camunda | Helm chart | Helm tested upstream | Infrastructure |
 | --- | --- | --- | --- |
 | 8.8 | `13.12.8` | 3.20.2 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
-| 8.9 | `14.11.1` | 3.22.0 or 4.3.0 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
-| 8.10 | `15.1.1` | 3.22.0 or 4.3.0 | Explicit companion releases |
+| 8.9 | `14.11.2` | 3.22.1 or 4.3.1 | Bundled Elasticsearch, Keycloak, and PostgreSQL |
+| 8.10 | `15.2.0` | 3.22.1 or 4.3.1 | Explicit companion releases |
 
 The 8.9 profile pins
-[`camunda-platform-8.9-14.11.1`](https://github.com/camunda/camunda-platform-helm/releases/tag/camunda-platform-8.9-14.11.1),
-the latest published 8.9 chart checked on 2026-10-20. It uses the chart's packaged
-image defaults: Orchestration and Optimize `8.9.23`, Identity `8.9.10`,
-Connectors `8.9.14`, and Console `8.9.123`, with no image version overrides.
+[`camunda-platform-8.9-14.11.2`](https://github.com/camunda/camunda-platform-helm/releases/tag/camunda-platform-8.9-14.11.2),
+the latest published 8.9 chart checked on 2026-10-23 against the
+[official Helm index](https://helm.camunda.io/index.yaml). It uses the chart's packaged
+image defaults: Orchestration and Optimize `8.9.25`, Identity `8.9.11`,
+Connectors `8.9.15`, and Console `8.9.128`, with no image version overrides.
 Continue to use `8.9` as the script argument.
 
-The 8.10 profile pins the published
-[`camunda-platform-8.10-15.1.1` release](https://github.com/camunda/camunda-platform-helm/releases/tag/camunda-platform-8.10-15.1.1).
-Its packaged defaults use Orchestration and Optimize `8.10.4`, Identity
-`8.10.1`, Connectors `8.10.0`, and Hub `8.10.2` (disabled here). Continue to
+The 8.10 profile pins
+[`camunda-platform-8.10-15.2.0`](https://github.com/camunda/camunda-platform-helm/releases/tag/camunda-platform-8.10-15.2.0),
+the latest published 8.10 chart checked on 2026-10-23 against the same index.
+Its packaged defaults use Orchestration and Optimize `8.10.5`, Identity
+`8.10.1`, Connectors `8.10.1`, and Hub `8.10.3` (disabled here). Continue to
 use `8.10` as the script argument to select this patch release. The chart pin keeps later
 releases from silently changing the local environment. The local topology
 remains intended for development even though these are GA application images.
