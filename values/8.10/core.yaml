@@ -104,6 +104,11 @@ orchestration:
     - file: local-development.yaml
       content: |
         camunda:
+          data:
+            secondary-storage:
+              elasticsearch:
+                # One Elasticsearch node: retain Camunda's mappings with no replicas.
+                number-of-replicas: 0
           system:
             cpu-thread-count: 2
             io-thread-count: 2

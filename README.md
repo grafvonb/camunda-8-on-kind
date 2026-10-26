@@ -430,9 +430,11 @@ elasticsearch-master
 
 The local PostgreSQL charts use persistent volume claims so pod restarts do
 not discard Identity or Keycloak state. Elasticsearch uses a 4 GiB claim and a
-512 MiB JVM heap. An index template enables automatic replica expansion so a
-single-node cluster does not remain yellow because application-created indices
-request one replica.
+512 MiB JVM heap. Orchestration sets
+`camunda.data.secondary-storage.elasticsearch.number-of-replicas: 0` for this
+single-node deployment. Camunda manages the index templates and their mappings;
+do not add a broad composable template to override replica settings, because it
+can replace Camunda's mappings when archive indices are created.
 
 The 8.10 core values intentionally contain none of the chart-15 removed keys:
 
